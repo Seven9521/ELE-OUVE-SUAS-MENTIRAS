@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Enigma</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+body {
+    background: black;
+    color: #00ff9f;
+    font-family: 'Share Tech Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* 🔴 MODO FINAL */
+.modo-final {
+    background: #0a0000;
+    color: #ff2a2a;
+    animation: pulsar 2s infinite;
+}
+
+@keyframes pulsar {
+    0% { background: #0a0000; }
+    50% { background: #1a0000; }
+    100% { background: #0a0000; }
+}
+
+.modo-final .terminal {
+    border: 1px solid #ff2a2a;
+    box-shadow: 0 0 20px #ff2a2a55;
+}
+
+.modo-final input {
+    border-bottom: 1px solid #ff2a2a;
+    color: #ff2a2a;
+}
+
+.modo-final button {
+    border: 1px solid #ff2a2a;
+    color: #ff2a2a;
+}
+
+.modo-final button:hover {
+    background: #ff2a2a;
+    color: black;
+    box-shadow: 0 0 10px #ff2a2a;
+}
+
+.modo-final .titulo {
+    color: #ff2a2a;
+}
+
+/* TÍTULO */
+.titulo {
+    margin-bottom: 20px;
+    font-size: 20px;
+    letter-spacing: 2px;
+    opacity: 0.8;
+}
+
+/* TERMINAL */
+.terminal {
+    width: 90%;
+    max-width: 700px;
+    border: 1px solid #00ff9f;
+    padding: 20px;
+    box-shadow: 0 0 20px #00ff9f33;
+}
+
+/* PERGUNTA */
+#pergunta::after {
+    content: "_";
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* IMAGEM */
+#imagem {
+    margin-top: 15px;
+    max-width: 100%;
+    display: none;
+}
+
+/* INPUT */
+input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #00ff9f;
+    color: #00ff9f;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* BOTÃO */
+.botao-container {
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    margin-top: 15px;
+    background: transparent;
+    border: 1px solid #00ff9f;
+    color: #00ff9f;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #00ff9f;
+    color: black;
+    box-shadow: 0 0 10px #00ff9f;
+}
+
+/* MENSAGEM */
+#mensagem {
+    margin-top: 15px;
+    height: 20px;
+}
+
+/* GLITCH */
+.glitch {
+    animation: glitch 0.15s infinite;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-3px, 2px); }
+    40% { transform: translate(3px, -2px); }
+    60% { transform: translate(-2px, -1px); }
+    80% { transform: translate(2px, 1px); }
+    100% { transform: translate(0); }
+}
+#pergunta {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+/* ⚫ MODO 22+ */
+.modo-absoluto {
+    background: black;
+    color: #bfbfbf;
+}
+
+.modo-absoluto .terminal {
+    border: 1px solid #555;
+    box-shadow: 0 0 15px #55555555;
+}
+
+.modo-absoluto input {
+    border-bottom: 1px solid #888;
+    color: #ccc;
+}
+
+.modo-absoluto button {
+    border: 1px solid #888;
+    color: #ccc;
+}
+
+.modo-absoluto button:hover {
+    background: #888;
+    color: black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="titulo">[ ELE OUVE SUAS MENTIRAS ]</div>
+
+<div class="terminal" id="terminal">
+    <div id="pergunta"></div>
+    <img id="imagem">
+    <input type="text" id="resposta" placeholder=">_">
+
+    <div class="botao-container">
+        <button onclick="verificar()">VERIFICAR</button>
+    </div>
+
+    <div id="mensagem"></div>
+</div>
+
+<script>
+
+const fases = [  
+    {
+        pergunta: "Através de qualquer curta resposta, existe uma grande pergunta. Não existe um caminho, mas com certeza, existe um lugar. Anote suas respostas e se atente às perguntas. Nada é o que parece. Boa sorte. 9521",
+        resposta: "o pequeno principe",
+        imagem: "https://i.postimg.cc/1twS9Q8Q/1000339397-(2).jpg"
+    },
+    {
+        pergunta: "Para que vamos copiar, quando podemos ser originais? Não sou igual, mas viemos do mesmo lugar. 00110011 00110011 00110000 00110001 00100000 01011000 A ordem dos fatores não altera o resultado. Me encontre, me dê só mais 2, e diga o que eu sou. Boa sorte. 9521",
+        resposta: "primo"
+    },
+    {
+        pergunta: "Alguém guardou todo o meu conhecimento em um site. A alma é tingida com a cor dos seus pensamentos. Encontre quem está abaixo de mim e diga-lhe, que implorei clemência. Boa sorte. 9521",
+        resposta: "robespierre"
+    },
+    {
+        pergunta: "0:24 O Aroma é bom. https://youtu.be/RYH7sASGJ_M Me diga o que eu represento, pois não sei o que eu sou.",
+        resposta: "pureza"
+    },
+    {
+        pergunta:"Uma de suas premiações por ter elaborado a lobotomia. uma de suas datas foi --- 3 de Março de 1945 --- Encontre a outra data, subtraia os anos, transfira para meses, avance os meses, ignorando a mudança de ano, subtraia os dias e você achará a ultima reunião. Mas reunião não é o nome correto...    Boa Sorte.   9521",
+        resposta:"Conferencia de potsdam"
+    },
+    {
+        pergunta:"Parabéns por chegar até aqui, Acho que peguei leve com vocês. Mas ainda assim, vocês são tão fofinhos!!  ------- 1731428823 ------- Pegue isso, você vai precisar. Boa Sorte d9521",
+        resposta:"55555555521",
+        imagem:"https://i.postimg.cc/5NRyx4RC/1000339993.jpg"
+    },
+    {
+      pergunta: "----- 48.863286,2.367174 ---- Que tal voltar-mos para o princípio? ou melhor, para terceiro? Abram alas, O circo irá começar. Boa Sorte. 9521",
+      resposta: "Napoleao iii",
+      imagem: "https://i.postimg.cc/QMVRjDvQ/e6100d9cc5b1b89c80cb0113f94ce2b2.jpg"
+    },
+    {
+      pergunta: "--- O discurso de Satã--- É Melhor reinar no inferno, do que servir no céu. 245 à 260/  |242:19/244:1/245:9/249:2/263:16/252:3/252:21|  Boa Sorte. 9521 ",
+      resposta: "lucifer"
+    },
+      {
+        pergunta: "Quantas formas de esconder você conhece? A  Bússola te guia para uma suposta direção.  Boa Sorte. 9521",
+        resposta: "dificuldade",
+        imagem:"https://i.postimg.cc/QCxrnwsf/1000340385.jpg"
+      },
+     {
+      pergunta: "O que você procura, está além dos ventos, das rosas, que um dia sopraram até as portas de carmesin, que um dia, se derramou ao seu sangue. Encontre minhas 8 posições.  Boa Sorte. 9521",
+      resposta: "bussola",
+      imagem: "https://i.postimg.cc/qqwpJnpK/9f3840f924596b609a714e1c9d454c4f.jpg"
+    },
+      {
+        pergunta: "A quanto tempo, Não?     Boa sorte. 9521",
+        resposta: "Depois do que aconteceu"
+      },
+      {
+        pergunta: "A partir de agora, iremos dificultar as coisas. Esqueça tudo que você sabe sobre enigmas e abra sua mente, para um local neural restrito. Se disponha a viajar até os limites da mente humana. Digite ---Here--- Para avançar e aguarde a contagem. Nós queremos os dispostos e determinados. Boa Sorte. 9521",
+        resposta: "here"
+      },
+      {
+        pergunta: "Мне не нравится свет, он меня раздражает. Открой дверь, гарантирую, мои зубы грязные. Ache um dos meus Irmãos. Boa Sorte. 9521",
+        resposta:"buckshot roullete"
+      },
+      {
+        pergunta:"Omniciente, mas ainda há algo acima de mim. Uma forma, um significado, um animal e um fato desconhecido. entre todas as minhas 3 faces, jamais encontraria um tom tão amarelado. ache meu superior. Boa Sorte. 9521",
+        imagem:"https://i.postimg.cc/YSzCdjP4/7cd7d95c5e3e7a84d5d89f59a6b202e8.jpg",
+        resposta:"Axolotl"
+      },
+      {
+        pergunta:"TsOjbyBhY3JlZGl0ZSBuYXMgbWVudGlyYXMgZGVsZSwgbWFzIHF1YW50YXMgbWVudGlyYXMgZWxlIGZhbG91PyBBY2hlIGVzc2UgbsO6bWVybSwgZGlnYSBhIHRvZG9zIG9zIG1ldXMgZGlzY8OtcHVsb3MgcXVlIGVzcGFsaGVtIGEgbWluaGEgcGFsYXZyYSBlIHNlamFtIGZpw6lpcw==, Você tem um trabalho. Ache o nosso mestre. Boa Sorte. 9521",
+        resposta:"jesus cristo"
+      },
+      {
+        pergunta:"01011001 01011010 01001001 00110001 01001111 01000110 01010000 01111010 01100101 01001001 01011010 01111000 01011010 01001010 01001000 01001010 01100010 00110101 01110011 01101100 01100110 00110010 01001000 01101010 01011101 01011010 00110011 00101111 01001100 01001001 01011001 01101011 01100100 01010110 01000101 00110001 01100101 01011010 01001000 01101010 01100100 01000100 01011010 01110011 00110001 01011101 01001010 01001000 01101010 01011101 01100110 01010010 01110111 01010011 01100010 01000101 01010010 01101011 01010101 01010101 01111010 01100110 01100110 00110010 01111001 01001111 00110011 01101111 01111001 01100111 01000001 01010101 00110001 01001111 01110000 01001101 01101111 00110101 01010101 00110101 01000111 01001000 01110101 01010111 01101110 01001001 01111001 01010110 01001010 01101011 01010101 01010011 00110011 01110001 01110011 01010011 01000001 01101101 01111001 01111101 01101011 01010100 01010001 01101101 01111001 01001110 01101111 01000101 01101100 01010001 01101010 01010000 00110010 00110101 01010110 00110000 00110000 01001110 01011001 01110000 00111001 01101101 01111010 00110110 01110010 01000101 01101010 01011001 01110111 01000010 01110001 01101011 01010101 01100100 01001100 01101010 01000111 01101011 01100110 01111000 01011001 01101000 01001010 01111010 01001011 01010101 01101101 01101000 01101111 01010111 00111000 01101010 01010111 00110011 01011000 01101010 01000101 01011010 01010110 01101111 01100100 01101001 01001010 01110010 01000010 01100010 01000101 01011101 01010110 01000101 01100100 01000111 01011010 01001010 01001111 01010110 01011101 01000101 01010110 01000100 01101100 00110001 01010011 01111010 00111101 00111101",
+        resposta:"richard trevithick"
+      },
+      {
+        pergunta:"Entre todos os planetas, Eu sou o mais quente. Nunca viram meu nascimento, e jamais irão ver minha morte. Encontre as minhas duas dimenções, e me diga a quanto tempo eu nasci. Boa Sorte. 9521                 ------- Ignore o neutro. -------",
+        imagem:"https://i.postimg.cc/Z5cJ2CcK/IMG-20260406-212350.jpg",
+        resposta:"964476286"
+      },
+      {
+        pergunta:"  ----AUMENTE O VOLUME!----  o quão bom é o seu ouvido? Boa Sorte. 9521",
+        resposta:"voce me escuta?"
+      },
+      {
+        pergunta:"quanto mais você pensar, 3 passos são descontados da sua progressão.             -- Ta Bk O F N Ra Uu Pa Es He R Au N --          26 modificações foram feitas. Boa sorte. 9521",
+        resposta:"the truth is near you"
+      },
+      {
+        pergunta:"tranquem as portas, fechem as janelas, ponhe sua mascara e se isole de seus conhecidos. 19??-19?? Boa Sorte. 9521",
+        imagem:"https://i.postimg.cc/RV809xN9/565-Sem-Titulo-20260409004536.png",
+        resposta:"gripe espanhola"
+      },
+      {
+        pergunta:"O primeiro te levará a 10 caminhos. ------ υωυψχώτξωυ -------   https://pt.wikipedia.org/wiki/Neil_Armstrong. Boa Sorte. 9521  ",
+        resposta:"vender sozinho"
+      },
+      {
+        pergunta:"01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 00001010 01001001 01000111 01010011 01001111 01010100 01001110 01010101 00100000 01001011 01011000 01011000 01000111 01001010 01010101 00100000 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 00001010 01001010 01001011 01011001 01001111 01011001 01011010 01000111 00100000 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01000111 01001110 01001110 01000111 01001110 01000111 01001110 01000111 Boa Sorte. 9521",
+        imagem:"https://i.postimg.cc/pdnsc0ZY/566-Sem-Titulo-20260409194515.png",
+        resposta:"cruz da gota de sangue"
+      },
+      {
+        pergunta:"Você Chegou longe demais acompanhado, Se quiser ir longe, vá acompanhado, Se Quiser ganhar, Vá sozinho. Nós Queremos os melhores, e não os seguidores. Digite /Here2/ para avançar, estarei ansioso para descobrir quem irá cruzar essa linha irreal. Boa Sorte. Mat. ",
+        resposta:"here2"
+      }
+      
+  ];
+
+let faseAtual = 22;
+
+const mensagensErro = [
+    "ACESSO NEGADO",
+    "ERRO DE AUTENTICAÇÃO",
+    "TENTATIVA INVÁLIDA",
+    "REJEITADO",
+    "FALHA",
+
+    "VOCÊ NÃO ENTENDEU NADA",
+    "VOCÊ ESTÁ ERRADO",
+    "PARE DE TENTAR",
+    "ISSO É PATÉTICO",
+    "VOCÊ NÃO VAI CONSEGUIR",
+    "ELE ESTÁ TE OBSERVANDO"
+];
+
+function digitarTexto(texto) {
+    const el = document.getElementById("pergunta");
+    el.innerHTML = "";
+    let i = 0;
+
+    const intervalo = setInterval(() => {
+        el.innerHTML += texto[i];
+        i++;
+        if (i >= texto.length) clearInterval(intervalo);
+    }, 40);
+}
+
+function carregarFase() {
+    const fase = fases[faseAtual];
+
+    document.getElementById("resposta").value = "";
+    digitarTexto(fase.pergunta);
+
+    const img = document.getElementById("imagem");
+
+    if (fase.imagem) {
+        img.src = fase.imagem;
+        img.style.display = "block";
+    } else {
+        img.style.display = "none";
+    if (faseAtual === 17) {
+    setTimeout(() => {
+        tocarMorse("voce me escuta?");
+    }, 1000);
+}
+      
+    }
+
+// 🎭 MODOS VISUAIS
+document.body.classList.remove("modo-final", "modo-absoluto");
+
+if (faseAtual >= 23) {
+    document.body.classList.add("modo-absoluto");
+    document.querySelector(".titulo").innerText = "[ ELE MENTE PARA VOCÊ ]";
+
+} else if (faseAtual > 11) {
+    document.body.classList.add("modo-final");
+    document.querySelector(".titulo").innerText = "[ ELE OUVE SUAS MENTIRAS ]";
+}
+}
+
+function verificar() {
+    const inputRaw = document.getElementById("resposta").value;
+    const corretaRaw = fases[faseAtual].resposta;
+
+    function normalizar(texto) {
+        return texto.toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^\w\s]/g, "")
+            .trim();
+    }
+
+    function distancia(a, b) {
+        let matriz = [];
+
+        for (let i = 0; i <= b.length; i++) matriz[i] = [i];
+        for (let j = 0; j <= a.length; j++) matriz[0][j] = j;
+
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b[i - 1] === a[j - 1]) {
+                    matriz[i][j] = matriz[i - 1][j - 1];
+                } else {
+                    matriz[i][j] = Math.min(
+                        matriz[i - 1][j - 1] + 1,
+                        matriz[i][j - 1] + 1,
+                        matriz[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+
+        return matriz[b.length][a.length];
+    }
+
+    const input = normalizar(inputRaw);
+    const correta = normalizar(corretaRaw);
+
+    if (distancia(input, correta) <= 2) {
+
+        cutscene9521(() => {
+
+    // 💀 FINAL FALSO NA FASE 22
+    if (faseAtual === 22) {
+        finalFalso();
+        return; // 🔒 impede o jogo de continuar
+    }
+
+    faseAtual++;
+
+    if (faseAtual < fases.length) {
+        carregarFase();
+    } else {
+        digitarTexto("ACESSO CONCEDIDO");
+    }
+});
+
+    } else {
+        erro();
+    }
+}
+
+function erro() {
+    const msg = document.getElementById("mensagem");
+    const terminal = document.getElementById("terminal");
+
+    let pool = faseAtual >= 22
+    ? mensagensErro.slice(5)
+    : mensagensErro.slice(0, 5);
+
+const randomMsg = pool[Math.floor(Math.random() * pool.length)];
+    msg.innerText = randomMsg;
+
+    terminal.classList.add("glitch");
+
+    setTimeout(() => {
+        terminal.classList.remove("glitch");
+        msg.innerText = "";
+    }, 2000);
+}
+
+document.getElementById("resposta").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") verificar();
+});
+
+carregarFase();
+
+function cutscene9521(callback) {
+    const tela = document.createElement("div");
+
+    tela.style.position = "fixed";
+    tela.style.top = 0;
+    tela.style.left = 0;
+    tela.style.width = "100%";
+    tela.style.height = "100%";
+    if (faseAtual >= 23) {
+    tela.style.background = "black";
+    tela.style.color = "#bfbfbf";
+} else if (faseAtual > 11) {
+    tela.style.background = "#0a0000";
+    tela.style.color = "#ff2a2a";
+} else {
+    tela.style.background = "black";
+    tela.style.color = "#00ff9f";
+}
+    tela.style.display = "flex";
+    tela.style.alignItems = "center";
+    tela.style.justifyContent = "center";
+    tela.style.fontSize = "40px";
+    tela.style.fontFamily = "'Share Tech Mono', monospace";
+    tela.style.zIndex = "9999";
+
+    tela.innerText = "0000";
+    document.body.appendChild(tela);
+
+    let inicio = Date.now();
+    let duracao = 8000;
+
+    function easeInOut(t) {
+        return t < 0.5
+            ? 2 * t * t
+            : 1 - Math.pow(-2 * t + 2, 5) / 2;
+    }
+
+    const intervalo = setInterval(() => {
+        let tempo = Date.now() - inicio;
+        let progresso = tempo / duracao;
+
+        if (progresso >= 1) {
+            progresso = 1;
+            clearInterval(intervalo);
+        }
+
+        let eased = easeInOut(progresso);
+        let numero = Math.floor(eased * 9521);
+
+        tela.innerText = numero.toString().padStart(4, "0");
+
+        if (progresso === 1) {
+            setTimeout(() => {
+                document.body.removeChild(tela);
+                callback();
+            }, 1000);
+        }
+
+    }, 1);
+}
+
+// 🔊 CONTROLE DE ÁUDIO (OBRIGATÓRIO PRA CELULAR)
+let contexto = null;
+let audioLiberado = false;
+
+function liberarAudio() {
+    if (!audioLiberado) {
+        contexto = new (window.AudioContext || window.webkitAudioContext)();
+        contexto.resume();
+        audioLiberado = true;
+        console.log("🔊 Áudio liberado");
+    }
+}
+
+document.addEventListener("click", liberarAudio);
+document.addEventListener("touchstart", liberarAudio);
+
+
+// 🔤 TABELA MORSE
+const morse = {
+    'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.',
+    'f': '..-.', 'g': '--.', 'h': '....', 'i': '..', 'j': '.---',
+    'k': '-.-', 'l': '.-..', 'm': '--', 'n': '-.', 'o': '---',
+    'p': '.--.', 'q': '--.-', 'r': '.-.', 's': '...', 't': '-',
+    'u': '..-', 'v': '...-', 'w': '.--', 'x': '-..-', 'y': '-.--',
+    'z': '--..', '?': '..--..', ' ': '/'
+};
+
+
+// 🔊 GERADOR DE SOM
+function beep(inicio, duracao) {
+    const osc = contexto.createOscillator();
+    const gain = contexto.createGain();
+
+    osc.connect(gain);
+    gain.connect(contexto.destination);
+
+    osc.frequency.value = 500;
+    gain.gain.value = 0.1;
+
+    osc.start(inicio);
+    osc.stop(inicio + duracao);
+}
+const palavrasSoltas = ["als","iqk","reu","zoq","bta","xel","muv","qir","den","lok",
+"fap","zic","yom","ves","ruk","paj","tih","nol","gev","bur",
+"cak","xim","dof","lep","rav","suy","kex","wim","boq","jid",
+"nal","tes","vor","hup","giz","lam","qop","nux","fer","zib",
+"tok","wem","dax","ril","cug","pov","mek","rin","xal","dut",
+"seb","qon","jir","vuk","haz","bem","tif","yor","pel","nus",
+"cag","diw","xob","lur","fen","kip","zam","tor","bel","sim",
+"vak","nop","qud","rex","mil","taf","zen","gip","lur","dax",
+"wem","jos","kib","raf","tix","nul","vex","pir","cob","sug",
+"dan","rel","fox","mip","zan","lek","bur","tif","xog","nem",
+"pax","sir","vel","gud","cam","noz","wix","tep","jor","bav",
+"kim","lug","sef","dor","pax","nim","wek","gol","ziv","qad",
+"rup","ven","tas","jek","fil","hob","mur","san","dex","wol",
+"pib","ran","tox","kef","yal","zim","vot","neb","qir","xal",
+"tuf","dem","lop","cig","bar","wex","mun","sof","yir","jad",
+"kev","pur","lom","tis","bax","ren","div","cor","nal","zup",
+"hem","jix","vor","lek","tav","nim","qex","rud","sil","bop",
+"mex","zan","kir","fex","dop","vul","rax","tem","sop","nex","Kay","Zeca","Ilumindo","Almeida","lycan","hiro","iury","luiz","LG","Lily" ];
+
+function spawnPalavra() {
+    if (faseAtual < 23) return;
+
+    const palavra = document.createElement("div");
+    palavra.innerText = palavrasSoltas[Math.floor(Math.random() * palavrasSoltas.length)];
+
+    palavra.style.position = "fixed";
+    palavra.style.left = Math.random() * 90 + "%";
+    palavra.style.top = Math.random() * 90 + "%";
+    palavra.style.color = "#777";
+    palavra.style.opacity = 0.6;
+    palavra.style.pointerEvents = "none";
+
+    document.body.appendChild(palavra);
+
+    setTimeout(() => {
+        palavra.remove();
+    }, 2000);
+}
+
+setInterval(spawnPalavra, 1500);
+
+
+// 🔊 TOCAR FRASE EM MORSE
+function tocarMorse(frase) {
+    if (!audioLiberado || !contexto) return;
+
+    let tempo = contexto.currentTime;
+    const unidade = 0.12;
+
+    for (let letra of frase.toLowerCase()) {
+        let codigo = morse[letra];
+        if (!codigo) continue;
+
+        if (codigo === '/') {
+            tempo += unidade * 7;
+            continue;
+        }
+
+        for (let simbolo of codigo) {
+            if (simbolo === '.') beep(tempo, unidade);
+            if (simbolo === '-') beep(tempo, unidade * 3);
+
+            tempo += unidade; // espaço entre sinais
+        }
+
+        tempo += unidade * 4; // espaço entre letras
+    }
+}
+function finalFalso() {
+    const tela = document.createElement("div");
+
+    tela.style.position = "fixed";
+    tela.style.top = 0;
+    tela.style.left = 0;
+    tela.style.width = "100%";
+    tela.style.height = "100%";
+    tela.style.background = "black";
+    tela.style.color = "#00ff9f";
+    tela.style.display = "flex";
+    tela.style.flexDirection = "column";
+    tela.style.alignItems = "center";
+    tela.style.justifyContent = "center";
+    tela.style.fontSize = "28px";
+    tela.style.fontFamily = "'Share Tech Mono', monospace";
+    tela.style.zIndex = "9999";
+    tela.style.textAlign = "center";
+
+    document.body.appendChild(tela);
+
+    // sequência de mensagens
+    const mensagens = [
+        "PROCESSANDO...",
+        "VERIFICANDO RESPOSTAS...",
+        "ACESSO CONCEDIDO",
+        "",
+        "Parabéns.",
+        "Você concluiu o enigma.",
+        "",
+        "Encerrando sistema..."
+    ];
+
+    let i = 0;
+
+    function proximaMensagem() {
+        if (i < mensagens.length) {
+            tela.innerText = mensagens[i];
+            i++;
+            setTimeout(proximaMensagem, 1500);
+        } else {
+
+            // quebra de expectativa
+            setTimeout(() => {
+                tela.style.color = "#ff2a2a";
+                tela.innerText = "...\n\nAlgo não está certo.";
+            }, 2000);
+
+            setTimeout(() => {
+                tela.innerText = "Você chegou longe demais.";
+            }, 4000);
+
+            setTimeout(() => {
+                tela.innerText = "E mesmo assim... não terminou.";
+            }, 6000);
+
+            setTimeout(() => {
+                tela.innerText = "O verdadeiro enigma ainda não começou.";
+            }, 8000);
+
+            setTimeout(() => {
+                tela.innerText = "9521";
+            }, 10000);
+
+            // 🔒 trava tudo
+            setTimeout(() => {
+                document.body.innerHTML = "";
+            }, 13000);
+        }
+    }
+
+    proximaMensagem();
+}
+</script>
+
+</body>
+</html>
